@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>The Minimum and Maximum Algorithms</title>
+<meta name="Generator" content="Vim/8.1">
+<meta name="plugin-version" content="vim8.1_v1">
+<meta name="settings" content="number_lines,whole_filler,use_css,no_foldcolumn,expand_tabs,line_ids,prevent_copy=">
+<meta name="colorscheme" content="none">
+<style type="text/css">
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.LineNr { color: #af5f00; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+<script type='text/javascript'>
+<!--
+
+/* function to open any folds containing a jumped-to line before jumping to it */
+function JumpToLine()
+{
+  var lineNum;
+  lineNum = window.location.hash;
+  lineNum = lineNum.substr(1); /* strip off '#' */
+
+  if (lineNum.indexOf('L') == -1) {
+    lineNum = 'L'+lineNum;
+  }
+  if (lineNum.indexOf('W') == -1) {
+    lineNum = 'W1'+lineNum;
+  }
+  var lineElem = document.getElementById(lineNum);
+  /* Always jump to new location even if the line was hidden inside a fold, or
+   * we corrected the raw number to a line ID.
+   */
+  if (lineElem) {
+    lineElem.scrollIntoView(true);
+  }
+  return true;
+}
+if ('onhashchange' in window) {
+  window.onhashchange = JumpToLine;
+}
+
+-->
+</script>
+</head>
+<body onload='JumpToLine();'>
+<table border='1' width='100%' id='vimCodeElement'>
+<tr>
+  <th>The <i>Minimum</i> Algorithm</th>
+  <th>The <i>Maximum</i> Algorithm</th>
+</tr><tr>
+<td valign="top"><div>
+<pre>
+<span id="W1L1" class="LineNr"> 1 </span><span class="DiffChange">  // Finds the </span><span class="DiffText">low</span><span class="DiffChange">est recorded temperature from file at dataFilePath.                                                              </span>
+<span id="W1L2" class="LineNr"> 2 </span><span class="DiffChange">  // Since this looks for the &quot;m</span><span class="DiffText">in</span><span class="DiffChange">imum&quot; and the daily low &lt;= daily high,                                                           </span>
+<span id="W1L3" class="LineNr"> 3 </span><span class="DiffChange">  // only the daily </span><span class="DiffText">low</span><span class="DiffChange"> field is used in the algorithm.                                                                            </span>
+<span id="W1L4" class="LineNr"> 4 </span><span class="DiffChange">  private static int find</span><span class="DiffText">Low</span><span class="DiffChange">est(String dataFilePath)                                                                               </span>
+<span id="W1L5" class="LineNr"> 5 </span>          throws Exception
+<span id="W1L6" class="LineNr"> 6 </span>  {
+<span id="W1L7" class="LineNr"> 7 </span>    BufferedReader dataFile
+<span id="W1L8" class="LineNr"> 8 </span>            = new BufferedReader(new FileReader(dataFilePath));
+<span id="W1L9" class="LineNr"> 9 </span>
+<span id="W1L10" class="LineNr">10 </span><span class="DiffChange">    int m = Integer.M</span><span class="DiffText">AX</span><span class="DiffChange">_VALUE;                                                                                                     </span>
+<span id="W1L11" class="LineNr">11 </span>    String line = dataFile.readLine();
+<span id="W1L12" class="LineNr">12 </span>    while (line != null) {
+<span id="W1L13" class="LineNr">13 </span>      int firstCommaPos = line.indexOf(',');
+<span id="W1L14" class="LineNr">14 </span>      int nextCommaPos = line.indexOf(',', firstCommaPos + 1);
+<span id="W1L15" class="LineNr">15 </span><span class="DiffChange">      String sTemp = line.substring(</span><span class="DiffText">firstCommaPos + 1, nextCommaPos</span><span class="DiffChange">);                                                              </span>
+<span id="W1L16" class="LineNr">16 </span>      int temperatureRecorded = Integer.parseInt(sTemp);
+<span id="W1L17" class="LineNr">17 </span><span class="DiffChange">      if (temperatureRecorded </span><span class="DiffText">&lt;</span><span class="DiffChange"> m) {                                                                                               </span>
+<span id="W1L18" class="LineNr">18 </span>        m = temperatureRecorded;
+<span id="W1L19" class="LineNr">19 </span>      }
+<span id="W1L20" class="LineNr">20 </span>      line = dataFile.readLine();
+<span id="W1L21" class="LineNr">21 </span>    }
+<span id="W1L22" class="LineNr">22 </span>    return m;
+<span id="W1L23" class="LineNr">23 </span>  }
+</pre>
+</div></td>
+<td valign="top"><div>
+<pre>
+<span id="W2L1" class="LineNr"> 1 </span><span class="DiffChange">  // Finds the </span><span class="DiffText">high</span><span class="DiffChange">est recorded temperature from file at dataFilePath.                                                             </span>
+<span id="W2L2" class="LineNr"> 2 </span><span class="DiffChange">  // Since this looks for the &quot;m</span><span class="DiffText">ax</span><span class="DiffChange">imum&quot; and the daily low &lt;= daily high,                                                           </span>
+<span id="W2L3" class="LineNr"> 3 </span><span class="DiffChange">  // only the daily </span><span class="DiffText">high</span><span class="DiffChange"> field is used in the algorithm.                                                                           </span>
+<span id="W2L4" class="LineNr"> 4 </span><span class="DiffChange">  private static int find</span><span class="DiffText">High</span><span class="DiffChange">est(String dataFilePath)                                                                              </span>
+<span id="W2L5" class="LineNr"> 5 </span>          throws Exception
+<span id="W2L6" class="LineNr"> 6 </span>  {
+<span id="W2L7" class="LineNr"> 7 </span>    BufferedReader dataFile
+<span id="W2L8" class="LineNr"> 8 </span>            = new BufferedReader(new FileReader(dataFilePath));
+<span id="W2L9" class="LineNr"> 9 </span>
+<span id="W2L10" class="LineNr">10 </span><span class="DiffChange">    int m = Integer.M</span><span class="DiffText">IN</span><span class="DiffChange">_VALUE;                                                                                                     </span>
+<span id="W2L11" class="LineNr">11 </span>    String line = dataFile.readLine();
+<span id="W2L12" class="LineNr">12 </span>    while (line != null) {
+<span id="W2L13" class="LineNr">13 </span>      int firstCommaPos = line.indexOf(',');
+<span id="W2L14" class="LineNr">14 </span>      int nextCommaPos = line.indexOf(',', firstCommaPos + 1);
+<span id="W2L15" class="LineNr">15 </span><span class="DiffChange">      String sTemp = line.substring(</span><span class="DiffText">nextCommaPos + 1</span><span class="DiffChange">);                                                                             </span>
+<span id="W2L16" class="LineNr">16 </span>      int temperatureRecorded = Integer.parseInt(sTemp);
+<span id="W2L17" class="LineNr">17 </span><span class="DiffChange">      if (temperatureRecorded </span><span class="DiffText">&gt;</span><span class="DiffChange"> m) {                                                                                               </span>
+<span id="W2L18" class="LineNr">18 </span>        m = temperatureRecorded;
+<span id="W2L19" class="LineNr">19 </span>      }
+<span id="W2L20" class="LineNr">20 </span>      line = dataFile.readLine();
+<span id="W2L21" class="LineNr">21 </span>    }
+<span id="W2L22" class="LineNr">22 </span>    return m;
+<span id="W2L23" class="LineNr">23 </span>  }
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+
